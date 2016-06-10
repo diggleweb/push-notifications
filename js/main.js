@@ -18,8 +18,10 @@ if ('serviceWorker' in navigator) {
 
 subscribeButton.addEventListener('click', function() {
   if (isSubscribed) {
+    console.log('unsubscribe');
     unsubscribe();
   } else {
+    console.log('Subscribe');
     subscribe();
   }
 });
@@ -29,6 +31,9 @@ function subscribe() {
   then(function(pushSubscription){
     sub = pushSubscription;
     console.log('Subscribed! Endpoint:', sub.endpoint);
+
+    addUser(sub.endpoint);
+
     subscribeButton.textContent = 'Unsubscribe';
     isSubscribed = true;
   });
@@ -44,3 +49,20 @@ function unsubscribe() {
     subscribeButton.textContent = 'Subscribe';
   });
 } 
+
+function addUser(endpoint){
+  var endpoint = endpoint.split('/');
+  var i = (endpoint.length-1 );
+
+  endpoint = endpoint[i];
+
+  if(endpoint != ''){
+    
+    $.post('actions.php', {endpoint : endpoint, 'act' : 'add-user'}, function(r){
+      if(r.res == 1){
+        alert('usuario foi adicionado!');
+      }else{ console.log('Ocorreu algum erro ao adicionar usuario'); }
+    }, 'json');
+
+  }
+}

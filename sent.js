@@ -1,4 +1,44 @@
- 
+
+function send_message_to_sw(title, msg, link){
+   navigator.serviceWorker.controller.postMessage({title : title, msg : msg, link : link});
+}
+  
+function sendPushToClient(){
+	var KEY  = 'AIzaSyB_cFsUwNs1k3hnn86G89gLRtKGPtWTDaE';
+	
+	var KEYu = 'c4kpokpjY_I:APA91bEe9GIIMZQkY7uZBLiEO7SmH47ac27u_kxjVTwmYtaU5MHXCYt-SK2DILSGx4rnUGT34dqK7T-k49BmRNZgEvVdMUu15USJEICB6HqnvRgWCuThhiLTZQ_y6stxMumcbOQQYUhM';
+  
+	$.ajax({
+	    url: "https://android.googleapis.com/gcm/send",
+	    beforeSend: function(xhr) { 
+	      xhr.setRequestHeader("Authorization", "key=" + KEY); 
+	    },
+	    type: 'POST',
+	    dataType: 'json',
+	    contentType: 'application/json',
+	    processData: false,
+	    
+	    data: '{"registration_ids":["'+KEYu+'"]}',
+	   
+	    success: function (data) {
+	        if(data.success){
+	        	console.log('Push Enviado com sucesso!');
+	        }else{
+	        	alert('Error');
+	        }
+	    },
+
+	    error: function(){
+	      alert("Cannot get data");
+	    }
+	});
+}
+
+
+
+
+
+
 	/*function send_message_to_sw(msg){#
 		return new Promise(function(resolve, reject){
 		    // Create a Message Channel
@@ -17,35 +57,3 @@
 		    navigator.serviceWorker.controller.postMessage("Client 1 says '"+msg+"'", [msg_chan.port2]);
 		});
 	}*/
-
-function send_message_to_sw(title, msg){
-   navigator.serviceWorker.controller.postMessage({title : title, msg : msg});
-}
- 
- 
-function sendPush(){
-	var KEY  = 'AIzaSyB_cFsUwNs1k3hnn86G89gLRtKGPtWTDaE';
-	var KEYu = 'cgHpWogsKm4:APA91bGfqIBnYxFwj297rh9B4Vh9IVObbkLGX0w39Uufa2LFcfx1SlVPPj503tEx2GPYGzHNknA6l6uZvtFauSGivg96qN_tt7_vkKNua09Z5ZKfippXVJBKpePQ423HH9lj7pBZ-DvZ';
-  
-	$.ajax({
-	    url: "https://android.googleapis.com/gcm/send",
-	    beforeSend: function(xhr) { 
-	      xhr.setRequestHeader("Authorization", "key=" + KEY); 
-	    },
-	    type: 'POST',
-	    dataType: 'json',
-	    contentType: 'application/json',
-	    processData: false,
-	    data: '{"registration_ids":["cgHpWogsKm4:APA91bGfqIBnYxFwj297rh9B4Vh9IVObbkLGX0w39Uufa2LFcfx1SlVPPj503tEx2GPYGzHNknA6l6uZvtFauSGivg96qN_tt7_vkKNua09Z5ZKfippXVJBKpePQ423HH9lj7pBZ-DvZ"]}',
-	    success: function (data) {
-	        if(data.success){
-	        	console.log('Push Enviado com sucesso!');
-	        }else{
-	        	alert('Error');
-	        }
-	    },
-	    error: function(){
-	      alert("Cannot get data");
-	    }
-	});
-}
